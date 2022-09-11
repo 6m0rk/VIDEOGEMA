@@ -3,6 +3,15 @@ import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
+import {
+  Flex,
+  Box,
+  Button,
+  Spinner,
+  Input,
+  Textarea,
+  Progress,
+} from "theme-ui";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -15,6 +24,8 @@ export default function CreateItem() {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   const [fileUrl, setFileUrl] = useState(null);
+  const [max, setMax] = useState(0);
+  const [value, setValue] = useState(0);
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
@@ -25,10 +36,12 @@ export default function CreateItem() {
   async function onChange(e) {
     const file = e.target.files[0];
     console.log(file);
+    setMax(file.size);
     try {
       const added = await client.add(file, {
         progress: (prog) => {
           console.log(`received: ${prog}`);
+          setValue(prog);
           file.size !== prog ? setLoading(true) : setLoading(false);
         },
       });
@@ -87,60 +100,45 @@ export default function CreateItem() {
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="w-1/2 flex flex-col pb-12">
-        <input
+    <Flex
+      sx={{
+        p: [1, 2, 3, 4],
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Flex sx={{ flexDirection: "column", width: ["100%", "80%", 500] }}>
+        <Input
+          sx={{ mb: 3 }}
           placeholder="Asset Name"
-          className="mt-8 border  p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, name: e.target.value })
           }
         />
-        <textarea
+        <Textarea
+          sx={{ mb: 3 }}
           placeholder="Asset Description"
-          className="mt-2 border  p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, description: e.target.value })
           }
         />
-        <input
+        <Input
+          sx={{ mb: 3 }}
           placeholder="Asset Price in Eth"
-          className="mt-2 border p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, price: e.target.value })
           }
         />
 
-        <input type="file" name="Asset" className="my-4" onChange={onChange} />
+        <Input type="file" name="Asset" onChange={onChange} />
+        <Progress sx={{ color: "secondary", mb: 3 }} max={max} value={value} />
         {error && <p className="text-red-500">{error}</p>}
         {fileUrl && (
           <video className="mt-4" width="100%" src={fileUrl} controls loop />
         )}
-        <button
-          onClick={createMarket}
-          className="flex place-content-center items-center font-bold mt-4 bg-purple-500 text-white p-4 shadow-lg"
-        >
-          {loading && (
-            <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-          )}
-          Create Digital Asset
-        </button>
-      </div>
-    </div>
+        <Button onClick={createMarket}>Create Digital Asset</Button>
+      </Flex>
+    </Flex>
   );
 }
-

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import axios from "axios";
 import Web3Modal from "web3modal";
+import { Avatar, Flex, Text } from "theme-ui";
 
 import { nftmarketaddress, nftaddress } from "../config";
 
@@ -56,44 +57,93 @@ export default function CreatorDashboard() {
     setLoadingState("loaded");
   }
   if (loadingState === "loaded" && !nfts.length)
-    return <h1 className="py-10 px-20 text-3xl">No assets created</h1>;
+    return (
+      <Flex
+        sx={{
+          p: 5,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Avatar
+          sx={{
+            width: 150,
+            height: 150,
+            objectFit: "cover",
+            objectPosition: "center",
+            border: "4px solid",
+            borderColor: "secondary",
+          }}
+          src="https://wallup.net/wp-content/uploads/2019/09/897061-model-girl-beautiful-brunette-pretty-cute-beauty-sexy-pose-face-eyes-smile-hair-lips-figure.jpg"
+        />
+        <Text sx={{ mt: 3, fontSize: 18, fontWeight: "bold" }}>
+          0xLadyCrypto
+        </Text>
+        <h1 className="py-10 px-20 text-3xl">No assets created</h1>
+      </Flex>
+    );
   return (
-    <div>
-      <div className="p-4">
-        <h2 className="text-2xl py-2">Items Created</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {nfts.map((nft, i) => (
-            <div key={i} className="border shadow  overflow-hidden">
-              <video src={nft.image} width="100%" controls />
-              <div className="p-4 bg-black">
-                <p className="text-2xl font-bold text-white">
-                  Price - {nft.price} Eth
-                </p>
+    <>
+      <Flex
+        sx={{
+          p: 5,
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Avatar
+          sx={{
+            width: 150,
+            height: 150,
+            objectFit: "cover",
+            objectPosition: "center",
+            border: "4px solid",
+            borderColor: "secondary",
+          }}
+          src="https://wallup.net/wp-content/uploads/2019/09/897061-model-girl-beautiful-brunette-pretty-cute-beauty-sexy-pose-face-eyes-smile-hair-lips-figure.jpg"
+        />
+        <Text sx={{ mt: 3, fontSize: 18, fontWeight: "bold" }}>
+          0xLadyCrypto
+        </Text>
+      </Flex>
+      <div>
+        <div className="p-4">
+          <h2 className="text-2xl py-2">Items Created</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+            {nfts.map((nft, i) => (
+              <div key={i} className="border shadow  overflow-hidden">
+                <video src={nft.image} width="100%" controls />
+                <div className="p-4 bg-black">
+                  <p className="text-2xl font-bold text-white">
+                    Price - {nft.price} Eth
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="px-4">
+          {Boolean(sold.length) && (
+            <div>
+              <h2 className="text-2xl py-2">Items sold</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
+                {sold.map((nft, i) => (
+                  <div key={i} className="border shadow  overflow-hidden">
+                    <video src={nft.image} width="100%" controls />
+                    <div className="p-4 bg-black">
+                      <p className="text-2xl font-bold text-white">
+                        Price - {nft.price} Eth
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
+          )}
         </div>
       </div>
-      <div className="px-4">
-        {Boolean(sold.length) && (
-          <div>
-            <h2 className="text-2xl py-2">Items sold</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-              {sold.map((nft, i) => (
-                <div key={i} className="border shadow  overflow-hidden">
-                  <video src={nft.image} width="100%" controls />
-                  <div className="p-4 bg-black">
-                    <p className="text-2xl font-bold text-white">
-                      Price - {nft.price} Eth
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+    </>
   );
 }
-

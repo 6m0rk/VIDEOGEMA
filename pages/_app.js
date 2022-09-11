@@ -1,30 +1,58 @@
-import "../styles/globals.css";
-import Link from "next/link";
+import '../styles/globals.css';
+import Link from 'next/link';
+import { Text, ThemeProvider, Flex, Box, Input } from 'theme-ui';
+//import theme from "@theme-ui/preset-dark";
+import theme from '@theme-ui/preset-system';
+
+const dark = {
+  ...theme,
+  styles: {
+    ...theme,
+  },
+};
 
 function Marketplace({ Component, pageProps }) {
   return (
-    <div>
-      <nav className="border-b p-6">
-        <p className="text-4xl font-bold">VIDEOGEMA</p>
-        <div className="flex mt-4">
-          <Link href="/">
-            <a className="mr-4 text-purple-500">Home</a>
-          </Link>
-          <Link href="/create-item">
-            <a className="mr-6 text-purple-500">Sell Digital Asset</a>
-          </Link>
-          <Link href="/my-assets">
-            <a className="mr-6 text-purple-500">My Digital Assets</a>
-          </Link>
-          <Link href="/creator-dashboard">
-            <a className="mr-6 text-purple-500">Creator Dashboard</a>
-          </Link>
-        </div>
-      </nav>
-      <Component {...pageProps} />
-    </div>
+    <ThemeProvider theme={dark}>
+      <Flex sx={{ flexDirection: 'column', p: 4 }}>
+        <Text className="text-4xl font-bold">VIDEOGEMA</Text>
+        <Flex
+          as="nav"
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            py: 4,
+            borderBottom: '1px solid background',
+          }}
+        >
+          <div className="flex mt-4">
+            <Link href="/" passHref>
+              <Text as="a" variant="heading" sx={{ mr: 3, color: 'secondary' }}>
+                Dashboard
+              </Text>
+            </Link>
+            <Link href="/create-item" passHref>
+              <Text as="a" variant="heading" sx={{ mr: 3, color: 'secondary' }}>
+                Mint
+              </Text>
+            </Link>
+            <Link href="/my-assets" passHref>
+              <Text as="a" variant="heading" sx={{ mr: 3, color: 'secondary' }}>
+                My NFTs
+              </Text>
+            </Link>
+            <Link href="/creator-dashboard" passHref>
+              <Text as="a" variant="heading" sx={{ mr: 3, color: 'secondary' }}>
+                Profile
+              </Text>
+            </Link>
+          </div>
+          <Input placeholder="Search..." sx={{ width: 250 }} />
+        </Flex>
+        <Component {...pageProps} />
+      </Flex>
+    </ThemeProvider>
   );
 }
 
 export default Marketplace;
-
